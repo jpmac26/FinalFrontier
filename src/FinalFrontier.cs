@@ -32,6 +32,7 @@ namespace Nereid
 
          private volatile bool keyAltPressed = false;
          private volatile bool keyCtrlPressed = false;
+         private volatile bool hotkeyPressed = false;
 
          private volatile bool destroyed = false;
 
@@ -71,6 +72,7 @@ namespace Nereid
             if(e.from!=GameScenes.MAINMENU && e.to==GameScenes.MAINMENU)
             {
                configuration.Save();
+               WindowManager.instance.CloseAll();
             }
          }
 
@@ -137,13 +139,16 @@ namespace Nereid
 
          public void Update()
          {
-            if (Input.GetKeyDown(KeyCode.LeftAlt)) keyAltPressed = true;
-            if (Input.GetKeyUp(KeyCode.LeftAlt)) keyAltPressed = false;
-            if (Input.GetKeyDown(KeyCode.LeftControl)) keyCtrlPressed = true;
+            if (Input.GetKeyUp(KeyCode.LeftAlt))  keyAltPressed = false;
             if (Input.GetKeyUp(KeyCode.LeftControl)) keyCtrlPressed = false;
-            if (configuration.IsHotkeyEnabled() && keyAltPressed && Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.LeftAlt)) keyAltPressed = true;
+            if (Input.GetKeyDown(KeyCode.LeftControl)) keyCtrlPressed = true;
+            if (Input.GetKeyUp(configuration.hotkey)) hotkeyPressed = false;
+            if (Input.GetKeyDown(configuration.hotkey)) hotkeyPressed = true;
+
+            if (configuration.IsHotkeyEnabled() && keyAltPressed && hotkeyPressed)
             {
-               Log.Info("hotkey ALT-F detected");
+               Log.Info("hotkey detected");
                
                switch (HighLogic.LoadedScene)
                {
@@ -167,6 +172,8 @@ namespace Nereid
                      Log.Info("cant open/close hall of fame in game scene " + HighLogic.LoadedScene);
                      break;
                }
+               // don't detect the same keypress next frame
+               hotkeyPressed = false;
             }
 
             if (observer != null)

@@ -887,7 +887,7 @@ namespace Nereid
 
          public override String GetDescription()
          {
-            return "Awarded for" + FirstKerbalText().Envelope() + "orbiting " + base.body.GetName() + " half between " + innermost.GetName() + " and " + base.body.GetName();
+            return "Awarded for" + FirstKerbalText().Envelope() + "orbiting " + base.body.GetName() + " half between periapse of " + innermost.GetName() + " and " + base.body.GetName();
          }
       }
 
@@ -1423,13 +1423,13 @@ namespace Nereid
             KSPAchievements.RecordsAltitude record = node as KSPAchievements.RecordsAltitude;
             if (record == null) return false;
             if (!record.IsReached) return false;
-            if (record.record <= 0) return false;
+            if (record.record <= 1000) return false;
             return true;
          }
 
          public override String GetDescription()
          {
-            return "Awarded for any altitude record";
+            return "Awarded for any altitude record above 1000m";
          }
       }
 
